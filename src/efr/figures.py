@@ -9,10 +9,76 @@ import numpy as np
 from gvf.figures import cascade
 from gvf.style import GRIS, OKABE_ITO, appliquer, enregistrer, formateur, fr
 
-from .noms import francais
+from .noms import etiquette
 from .panel import ENSEMBLE
 
 DEST = Path("results/figures")
+
+
+# Les six écarts d'un même graphique tombent parfois à la même hauteur, à quelques dixièmes de point
+# près, et deux étiquettes posées au même endroit se recouvrent alors mot pour mot. Le placement est
+# donc mesuré : chaque étiquette essaie les hauteurs dans l'ordre et garde la première qui tient
+# dans le cadre sans toucher ni un point déjà tracé ni une étiquette déjà posée.
+HAUTEURS = [13, -17, 58, -62, 103, -107, 148, -152]
+TRAIT = {"arrowstyle": "-", "color": GRIS, "linewidth": 0.6, "shrinkA": 0, "shrinkB": 5}
+
+
+def _poser_etiquettes(fig, ax, extremes) -> None:
+    """Les noms des six industries les plus extrêmes, posés sans recouvrement.
+
+    À appeler en dernier : le titre et les deux légendes d'axe rétrécissent le cadre, et une place
+    mesurée avant eux ne vaut plus rien une fois qu'ils sont posés. Le calage automatique est figé
+    juste après le premier tracé, sans quoi l'enregistrement le rejouerait, déplacerait le cadre et
+    rendrait fausses les positions mesurées ici.
+    """
+    fig.canvas.draw()
+    fig.set_layout_engine("none")
+    rendu = fig.canvas.get_renderer()
+    from matplotlib.transforms import Bbox
+
+    cadre = ax.get_window_extent(rendu)
+    occupe = []
+    for x, y in ax.collections[0].get_offsets():
+        px, py = ax.transData.transform((x, y))
+        occupe.append(Bbox.from_extents(px - 7, py - 7, px + 7, py + 7))
+
+    def poser(ligne, hauteur, trait):
+        """Une étiquette au-dessus ou au-dessous de son point, rabattue vers l'intérieur du cadre.
+
+        Un point proche d'un bord porte son nom du côté du centre : centrer le texte sur lui le
+        ferait déborder du cadre, et le calage à la sauvegarde le rognerait.
+        """
+        x = ligne["rendement_exploitation_pct"]
+        part = (ax.transData.transform((x, 0))[0] - cadre.x0) / cadre.width
+        cote, ecart = ("center", 0) if 0.15 < part < 0.85 else (
+            ("left", 6) if part <= 0.15 else ("right", -6))
+        return ax.annotate(
+            etiquette(ligne["industrie"], 24, 2),
+            (x, ligne["apport_du_financement_pct"]), xytext=(ecart, hauteur),
+            textcoords="offset points", fontsize=8, color=GRIS, ha=cote,
+            va="bottom" if hauteur > 0 else "top",
+            arrowprops=TRAIT if trait else None)
+
+    for _, ligne in extremes.iterrows():
+        # L'essai se fait SANS trait de rappel : l'encombrement d'une annotation fléchée va jusqu'au
+        # point, donc toute hauteur paraîtrait occupée, le point étant lui-même dans la liste, et les
+        # six étiquettes retomberaient au même endroit.
+        retenue, boite = HAUTEURS[0], None
+        for hauteur in HAUTEURS:
+            essai = poser(ligne, hauteur, trait=False)
+            mesure = essai.get_window_extent(rendu)
+            essai.remove()
+            dedans = (cadre.x0 <= mesure.x0 and mesure.x1 <= cadre.x1
+                      and cadre.y0 <= mesure.y0 and mesure.y1 <= cadre.y1)
+            if dedans and not any(mesure.overlaps(autre) for autre in occupe):
+                retenue, boite = hauteur, mesure
+                break
+        if boite is None:
+            essai = poser(ligne, retenue, trait=False)
+            boite = essai.get_window_extent(rendu)
+            essai.remove()
+        poser(ligne, retenue, trait=True)
+        occupe.append(boite)
 
 
 def fig_decomposition(reformulations, dest: Path = DEST) -> dict:
@@ -47,37 +113,42 @@ def fig_decomposition(reformulations, dest: Path = DEST) -> dict:
 
 
 def fig_industries(moyenne, dest: Path = DEST) -> dict:
-    """Chaque industrie, son rendement d'exploitation et ce que l'emprunt y ajoute."""
+    """Chaque industrie, son rendement d'exploitation et ce que l'emprunt y ajoute.
+
+    Les bornes de la période sont lues dans le tableau plutôt qu'écrites en dur : l'axe ne peut pas
+    annoncer une fenêtre que les moyennes ne couvrent pas.
+    """
     appliquer()
     bloc = moyenne[moyenne["industrie"].ne(ENSEMBLE)].copy()
     bloc = bloc[np.isfinite(bloc["rendement_exploitation_pct"])
                 & np.isfinite(bloc["apport_du_financement_pct"])]
+    debut = str(bloc["periode_min"].min())[:4]
+    fin = str(bloc["periode_max"].max())[:4]
 
     fig, ax = plt.subplots(figsize=(9.8, 6.6))
     ax.scatter(bloc["rendement_exploitation_pct"], bloc["apport_du_financement_pct"], s=46,
                color=OKABE_ITO[0], alpha=0.8, zorder=4)
     ax.axhline(0, color=GRIS, linewidth=1.0)
-    # échelle logarithmique symétrique : une industrie tombe à moins vingt-huit points, et sur une
-    # échelle ordinaire elle écraserait les trente-huit autres contre l'axe
+    # échelle logarithmique symétrique : une industrie tombe très bas, et sur une échelle ordinaire
+    # elle écraserait toutes les autres contre l'axe. Le plancher est rendu avec la figure, pour que
+    # le README le cite au lieu de lire la graduation.
     ax.set_yscale("symlog", linthresh=2.0)
     ax.set_yticks([-20, -10, -5, -2, 0, 2, 5])
+    plancher = float(bloc["apport_du_financement_pct"].min())
     ax.get_yaxis().set_major_formatter(formateur(0))
     extremes = bloc.reindex(bloc["apport_du_financement_pct"].abs().sort_values().index).tail(6)
-    for rang, (_, ligne) in enumerate(extremes.iterrows()):
-        cote = 8 if ligne["rendement_exploitation_pct"] < 25 else -8
-        ax.annotate(francais(ligne["industrie"], 38),
-                    (ligne["rendement_exploitation_pct"], ligne["apport_du_financement_pct"]),
-                    xytext=(cote, 11 if rang % 2 else -13), textcoords="offset points",
-                    fontsize=8, color=GRIS, ha="left" if cote > 0 else "right", va="center")
-    ax.set_xlabel("Rendement de l'exploitation, moyenne 2010 à 2026 (% par an)")
+    ax.set_xlabel(f"Rendement de l'exploitation, moyenne {debut} à {fin} (% par an)")
     ax.set_ylabel("Ce que l'emprunt ajoute au rendement\ndes capitaux propres (points par an)")
     ax.xaxis.set_major_formatter(formateur(0, " %"))
     positifs = int((bloc["apport_du_financement_pct"] > 0).sum())
     ax.set_title(f"Sur {len(bloc)} industries, l'emprunt ajoute du rendement dans {positifs} et en "
                  f"retire dans {len(bloc) - positifs}")
+    _poser_etiquettes(fig, ax, extremes)
     enregistrer(fig, dest, "industries")
     plt.close(fig)
-    return {"industries": int(len(bloc)), "apport_positif": positifs}
+    return {"industries": int(len(bloc)), "apport_positif": positifs,
+            "apport_minimum_pct": plancher, "periode_min": str(bloc["periode_min"].min()),
+            "periode_max": str(bloc["periode_max"].max())}
 
 
 def fig_deux_lectures(brut, net, dest: Path = DEST) -> dict:
@@ -94,9 +165,12 @@ def fig_deux_lectures(brut, net, dest: Path = DEST) -> dict:
     ax.barh(positions + 0.2, fusion["apport_du_financement_pct_net"], height=0.38,
             color=OKABE_ITO[1], label="soldes du groupe comptés comme du financement")
     ax.axvline(0, color=GRIS, linewidth=1.0)
-    ax.set_yticks(positions, [francais(nom) for nom in fusion["industrie"]], fontsize=8.5)
+    ax.set_yticks(positions, [etiquette(nom, 34, 2) for nom in fusion["industrie"]], fontsize=8.0)
     ax.set_xlabel("Ce que l'emprunt ajoute au rendement des capitaux propres (points par an)")
-    ax.legend(loc="lower right")
+    ax.xaxis.set_major_formatter(formateur(1))
+    # les barres sont triées par apport croissant dans la lecture brute, donc le coin en haut à
+    # gauche est le seul que ni les barres positives ni les barres négatives n'atteignent
+    ax.legend(loc="upper left")
     changent = int((np.sign(fusion["apport_du_financement_pct_brut"])
                     != np.sign(fusion["apport_du_financement_pct_net"])).sum())
     ax.set_title(f"Le traitement des soldes entre sociétés d'un même groupe change le signe dans "

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pandas as pd
@@ -69,7 +70,7 @@ def ensemble(periode: str = "2026-04"):
 
 @app.command()
 def industries():
-    """Le calcul sur les quarante industries et les soixante-six trimestres, dans les deux lectures."""
+    """Le calcul sur les quarante industries et sur tous les trimestres calculables, deux lectures."""
     table = donnees.charger()
     verdicts = []
     for cle in LECTURES:
@@ -85,18 +86,30 @@ def industries():
 
 @app.command()
 def figures():
-    """Les quatre figures, en PNG pour le README et en PDF vectoriel pour le rapport."""
+    """Les quatre figures, en PNG pour le README et en PDF vectoriel pour le rapport.
+
+    Chaque fabrique rend les nombres qu'elle dessine. Ils sont écrits dans `results/figures.json`,
+    faute de quoi les chiffres que le README lit sur les figures ne seraient nulle part dans
+    `results/` et ne se retrouveraient qu'en relisant la sortie console.
+    """
     from . import figures as fig
 
     table = donnees.charger()
     postes = donnees.postes(table, ENSEMBLE, "2026-04")
     lectures = {titre: reformuler(postes, cle) for cle, titre in LECTURES.items()}
-    typer.echo(f"décomposition : {fig.fig_decomposition(lectures)}")
     brut = pd.read_csv(RESULTATS / "moyennes_exploitation.csv")
     net = pd.read_csv(RESULTATS / "moyennes_financement.csv")
-    typer.echo(f"industries    : {fig.fig_industries(brut)}")
-    typer.echo(f"deux lectures : {fig.fig_deux_lectures(brut, net)}")
-    typer.echo(f"intragroupe   : {fig.fig_intragroupe(table)}")
+    rendus = {
+        "decomposition": fig.fig_decomposition(lectures),
+        "industries": fig.fig_industries(brut),
+        "deux_lectures": fig.fig_deux_lectures(brut, net),
+        "intragroupe": fig.fig_intragroupe(table),
+    }
+    RESULTATS.mkdir(parents=True, exist_ok=True)
+    chemin = RESULTATS / "figures.json"
+    chemin.write_text(json.dumps(rendus, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    typer.echo(f"écrit {chemin}")
+    typer.echo(json.dumps(rendus, indent=2, ensure_ascii=False))
 
 
 @app.command()

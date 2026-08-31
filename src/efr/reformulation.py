@@ -17,7 +17,7 @@ l'exploitation**.
 différence s'appelle la **dette financière nette**, et ce qu'elle coûte s'appelle le **coût de la
 dette**.
 
-De là vient une égalité qui est vraie par construction, et non par estimation :
+De là vient l'égalité de la reformulation, vraie par construction et non par estimation :
 
     rendement des capitaux propres = rendement de l'exploitation
                                      + levier × (rendement de l'exploitation − coût de la dette)
@@ -54,11 +54,15 @@ PRODUITS_FINANCIERS = ["Total interest revenue", "Total dividends"]
 CHARGES_FINANCIERES = ["Total interest expense",
                        "Dividends paid on equity securities classified as liabilities"]
 # Les intérêts qui portent sur les soldes entre sociétés d'un même groupe. Ils doivent suivre le
-# sort du solde lui-même : compter l'intérêt en charge financière tout en laissant la dette
-# correspondante dans l'exploitation ferait apparaître un coût de la dette de seize pour cent là où
-# il en vaut six.
+# sort du solde lui-même. Compter l'intérêt en charge financière tout en laissant la dette
+# correspondante dans l'exploitation rapporterait une charge et un solde de périmètres différents,
+# donc un coût de la dette qui n'est celui d'aucune dette.
 PRODUITS_INTRAGROUPE = ["Interest revenue from debt claims on affiliates"]
 CHARGES_INTRAGROUPE = ["Interest expense, amounts owing to affiliates"]
+# Le produit des participations dans les sociétés du groupe. Il suit la même règle que les intérêts
+# ci-dessus : quand le solde part au financement, son produit part avec lui. Il vaut 6 837 M$ au
+# 2026-04, soit sept fois les 971 M$ d'intérêts intragroupe, donc l'oublier ne serait pas un détail.
+PRODUITS_PARTICIPATIONS = ["Equity in unconsolidated affiliates"]
 
 TOTAL_ACTIF = "Total assets"
 TOTAL_PASSIF = "Total liabilities"
@@ -145,6 +149,13 @@ class Reformulation:
 
 
 def _somme(postes: pd.Series, noms: list[str]) -> float:
+    """La somme de quelques postes, qui vaut NaN dès que l'un d'eux n'est pas publié.
+
+    Le NaN est voulu. Statistique Canada n'a ouvert huit des postes utilisés ici qu'au premier
+    trimestre de 2020. Les compter pour zéro avant cette date rangerait des montants réels du mauvais
+    côté de la séparation, sans que rien ne le signale. Le NaN se propage donc jusqu'à l'actif
+    d'exploitation net, et la ligne est écartée puis comptée par `controles`.
+    """
     return float(sum(float(postes.get(nom, 0.0) or 0.0) for nom in noms))
 
 
@@ -154,7 +165,7 @@ def reformuler(postes: pd.Series, intragroupe: str = "exploitation") -> Reformul
     Le traitement des soldes entre sociétés d'un même groupe est le point qui change tout, et il est
     laissé au choix de l'appelant. En « exploitation », ils restent là où le bilan les met, ce qui
     est la lecture brute. En « financement », ils sont sortis de l'exploitation et rangés avec la
-    dette, ce qui est la lecture économique : un prêt d'une filiale à sa mère n'est pas un moyen de
+    dette. C'est la lecture économique : un prêt d'une filiale à sa mère n'est pas un moyen de
     produire, c'est un moyen de financer.
     """
     if intragroupe not in ("exploitation", "financement"):
@@ -192,8 +203,10 @@ def reformuler(postes: pd.Series, intragroupe: str = "exploitation") -> Reformul
     if intragroupe == "exploitation":
         produits -= _somme(postes, PRODUITS_INTRAGROUPE)
         charges -= _somme(postes, CHARGES_INTRAGROUPE)
+    else:
+        produits += _somme(postes, PRODUITS_PARTICIPATIONS)
     charge_nette = (charges - produits) * (1.0 - taux)
-    resultat_net = float(postes[RESULTAT_NET]) - minoritaires * 0.0
+    resultat_net = float(postes[RESULTAT_NET])
     resultat_exploitation = resultat_net + charge_nette
 
     return Reformulation(
@@ -205,12 +218,16 @@ def reformuler(postes: pd.Series, intragroupe: str = "exploitation") -> Reformul
 
 
 def ecart_a_l_identite(r: Reformulation) -> float:
-    """De combien l'égalité fondamentale ne se referme pas.
+    """De combien l'égalité de la reformulation ne se referme pas.
 
     Elle doit tenir exactement : le rendement calculé directement doit égaler le rendement de
     l'exploitation plus l'apport du financement. Si l'écart n'est pas nul, c'est qu'un poste a été
     compté deux fois ou oublié.
+
+    Quand la dette nette est nulle, l'apport n'est pas fini et il n'y a rien à contrôler. La fonction
+    rend alors NaN et non zéro : un zéro se confondrait avec une identité vérifiée, et le contrôle
+    s'éteindrait sans bruit là où la reformulation est la plus fragile.
     """
     if not np.isfinite(r.apport_du_financement):
-        return 0.0
+        return np.nan
     return r.rendement_capitaux_propres - (r.rendement_exploitation + r.apport_du_financement)

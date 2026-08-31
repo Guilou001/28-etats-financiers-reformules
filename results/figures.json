@@ -1,0 +1,31 @@
+{
+  "decomposition": {
+    "Soldes du groupe laissés dans l'exploitation": {
+      "exploitation_pct": 11.464644583566592,
+      "apport_pct": 1.2873299504700313,
+      "rendement_pct": 12.751974534036624
+    },
+    "Soldes du groupe comptés comme du financement": {
+      "exploitation_pct": 12.460141522549458,
+      "apport_pct": 0.29183301148716706,
+      "rendement_pct": 12.751974534036625
+    }
+  },
+  "industries": {
+    "industries": 39,
+    "apport_positif": 21,
+    "apport_minimum_pct": -28.018577143898195,
+    "periode_min": "2020-01",
+    "periode_max": "2026-04"
+  },
+  "deux_lectures": {
+    "changent_de_signe": 3,
+    "montrees": 14
+  },
+  "intragroupe": {
+    "debut_pct": 29.840568486759157,
+    "fin_pct": 24.635373414171998,
+    "minimum_pct": 24.635373414171998,
+    "maximum_pct": 29.840568486759157
+  }
+}

@@ -1,3 +1,3 @@
-intragroupe,lignes,identite_bilan_max,identite_reformulation_max
-exploitation,1040,1.0,1.5594084710912615e-05
-financement,1040,1.0,2.0638601788663946e-05
+intragroupe,lignes,lignes_ecartees,periode_min,periode_max,trimestres,identite_bilan_max,identite_bilan_max_tableau_entier,identite_reformulation_max,identite_reformulation_max_point_annuel,lignes_non_controlees
+exploitation,1040,1600,2020-01,2026-04,26,1.0,8.0,1.5594084710912615e-05,0.006237633884365046,0
+financement,1040,1600,2020-01,2026-04,26,1.0,8.0,2.0454577144779496e-05,0.008181830857911798,0

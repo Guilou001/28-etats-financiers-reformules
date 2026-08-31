@@ -5,6 +5,8 @@ qui s'affichent, eux, doivent être en français. Ils ne sont pas traduits ici :
 de la version française du même tableau, téléchargée le 2026-08-30.
 """
 
+import textwrap
+
 # ruff: noqa: E501
 # Les libellés officiels dépassent parfois cent dix caractères. Les couper serait les réécrire,
 # et ce fichier a justement pour raison d'être de ne pas les réécrire.
@@ -92,6 +94,21 @@ FRANCAIS = {
 }
 
 
-def francais(nom: str, longueur: int = 46) -> str:
-    """Le nom français, raccourci et sans son code entre crochets."""
-    return FRANCAIS.get(nom, nom).split(" [")[0][:longueur]
+def francais(nom: str) -> str:
+    """Le nom français, sans son code entre crochets."""
+    return FRANCAIS.get(nom, nom).split(" [")[0]
+
+
+def etiquette(nom: str, largeur: int = 24, lignes: int = 2) -> str:
+    """Le nom français replié sur plusieurs lignes, coupé seulement entre deux mots.
+
+    Une coupe au caractère près donnait « Fabrication de véhicules automobiles e », que le lecteur
+    ne peut ni prononcer ni rattacher à une industrie. Le repli respecte les mots, et quand le nom
+    dépasse encore le nombre de lignes autorisé, les points de suspension disent qu'il est tronqué.
+    """
+    entier = francais(nom)
+    morceaux = textwrap.wrap(entier, largeur) or [entier]
+    gardees = morceaux[:lignes]
+    if len(morceaux) > lignes:
+        gardees[-1] = gardees[-1] + "\u2026"
+    return "\n".join(gardees)
