@@ -200,13 +200,14 @@ def test_le_cout_de_la_dette_n_a_pas_de_sens_quand_la_dette_nette_est_nulle():
 def test_le_produit_des_participations_suit_le_solde_du_groupe():
     """Le pendant du test précédent, du côté des participations. Le produit des participations dans
     les sociétés du groupe reste dans l'exploitation tant que le solde y reste, et part au
-    financement avec lui. Dix de produit en plus allègent la charge financière nette de dix moins
-    l'impôt de 20 %, soit huit, dans la seule lecture nette."""
+    financement avec lui. Dix de produit en plus allègent la charge financière nette de dix ENTIERS,
+    et non de dix moins l'impôt : le tableau publie ce poste après impôt, si bien que lui appliquer
+    le taux de 20 % le taxerait une seconde fois. La lecture brute, elle, ne bouge pas."""
     avec = {"Equity in unconsolidated affiliates": 10.0, _CREANCES_GROUPE: 100.0}
     sans = {_CREANCES_GROUPE: 100.0}
     net_avec = reformuler(_bilan(**avec), "financement")
     net_sans = reformuler(_bilan(**sans), "financement")
-    assert net_avec.charge_financiere_nette == pytest.approx(net_sans.charge_financiere_nette - 8.0)
+    assert net_avec.charge_financiere_nette == pytest.approx(net_sans.charge_financiere_nette - 10.0)
     brut_avec = reformuler(_bilan(**avec), "exploitation")
     brut_sans = reformuler(_bilan(**sans), "exploitation")
     assert brut_avec.charge_financiere_nette == pytest.approx(brut_sans.charge_financiere_nette)

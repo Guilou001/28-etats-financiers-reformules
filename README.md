@@ -11,19 +11,19 @@ non financières du Canada.
 ![licence](https://img.shields.io/badge/code-MIT-green)
 
 **Résultat en une phrase.** Sur 26 trimestres et 39 industries, l'affaire elle-même rapporte de
-**11,5 % à 13,1 %** par an en médiane selon la lecture. L'emprunt n'ajoute que **+0,18 point** en
+**11,5 % à 13,0 %** par an en médiane selon la lecture. L'emprunt n'ajoute que **+0,18 point** en
 médiane, ou **−0,88 point** selon la façon de traiter les soldes entre sociétés d'un même groupe, et
-la part médiane du rendement qui lui revient va de **+0,26 % à −5,25 %**. Ce sont six médianes prises
+la part médiane du rendement qui lui revient va de **+0,26 % à −5,21 %**. Ce sont six médianes prises
 sur les 39 industries, et non des bornes : dix-neuf industries font mieux dans chaque lecture.
 
 *Summary in English. A Nissim-Penman reformulation of Statistics Canada's quarterly aggregate
 balance sheet and income statement (table 33-10-0225, 327 360 rows, 66 quarters, 40 industries),
 separating operating from financing returns. Eight of the items the reformulation adds up are only
 published from January 2020, so the calculation covers 26 quarters and 1 040 industry-quarters, and
-the other 1 600 are reported as dropped. Operating return runs from 11.5 % to 13.1 % a year at the
+the other 1 600 are reported as dropped. Operating return runs from 11.5 % to 13.0 % a year at the
 median, depending on the reading. The median contribution of leverage is +0.18 point in one reading
 and −0.88 point in the other, and the median share of return on equity it carries runs from +0.26 %
-to −5.25 %. These are medians over the 39 industries and not bounds: nineteen industries do better
+to −5.21 %. These are medians over the 39 industries and not bounds: nineteen industries do better
 in each reading. Both accounting
 identities hold on all 1 040 rows: 1 million dollars, one unit of the last digit the table publishes,
 and 0.008 points of annual return on the reformulation identity.*
@@ -113,18 +113,18 @@ Au dernier trimestre publié, avril 2026.
 | Lecture | L'affaire rapporte | Coût de la dette | Levier | L'emprunt ajoute | Total |
 |---|---:|---:|---:|---:|---:|
 | Soldes du groupe laissés dans l'exploitation | 11,46 % | 5,64 % | 0,221 | **+1,29 point** | 12,75 % |
-| Soldes du groupe comptés comme du financement | 12,46 % | 8,70 % | 0,078 | **+0,29 point** | 12,75 % |
+| Soldes du groupe comptés comme du financement | 12,32 % | 6,72 % | 0,078 | **+0,43 point** | 12,75 % |
 
 Comment lire ce tableau, en trois constats. Le premier est que la colonne de droite est la même dans
 les deux lignes, et c'est normal : le rendement des capitaux propres est un fait comptable, seule sa
 décomposition dépend du rangement. Le deuxième est que l'emprunt pèse **10,1 % du rendement** dans la
-première lecture et **2,3 %** dans la seconde, donc l'affaire fait presque tout dans les deux cas.
+première lecture et **3,4 %** dans la seconde, donc l'affaire fait presque tout dans les deux cas.
 Le troisième est que le coût de la dette de la seconde lecture ne se lit pas comme un taux. Cette
 lecture compense 1 806 milliards de participations et de créances sur le groupe par une dette de
 1 290 milliards envers lui, et ramène ainsi 3 330 milliards d'emprunts bruts à 280 milliards nets.
 Sur ces 1 806 milliards, 583 seulement sont des créances ; le reste est une participation dans les
 sociétés du groupe. La compensation efface **91,6 %** du solde, mais les produits financiers, qui
-viennent en déduction des charges, n'en effacent que **71,5 %**. Le rapport des deux monte donc sans
+viennent en déduction des charges, n'en effacent que **78,0 %**. Le rapport des deux monte donc sans
 qu'aucun taux d'emprunt ait bougé. Ce tableau porte sur un seul trimestre, et il ne dit rien de la
 stabilité de ces parts dans le temps.
 
@@ -144,7 +144,7 @@ industrie de plus.
 | Lecture | Industries | L'emprunt ajoute | L'emprunt domine | Apport médian | Part du rendement | L'affaire rapporte |
 |---|---:|---:|---:|---:|---:|---:|
 | Soldes dans l'exploitation | 39 | 21 | **0** | +0,18 point | 0,26 % | 11,55 % |
-| Soldes en financement | 39 | 15 | **1** | −0,88 point | −5,25 % | 13,07 % |
+| Soldes en financement | 39 | 15 | **1** | −0,88 point | −5,21 % | 12,96 % |
 
 Comment lire ce tableau, en trois constats. Le premier est la colonne « l'emprunt domine » : dans la
 première lecture, **aucune** des 39 industries ne tire de l'emprunt plus que de son affaire, et une
@@ -204,7 +204,7 @@ Les tests ne touchent jamais le réseau : ils tournent sur un bilan minuscule do
 choisi pour que le résultat se calcule de tête. Chaque fabrique de figure rend les nombres qu'elle
 dessine, et `efr figures` les écrit dans `results/figures.json`. Les deux tableaux de résultats et les
 quatre figures se relisent donc dans `results/`, à deux opérations près. Les parts du rendement,
-10,1 % et 2,3 %, divisent deux colonnes de `results/ensemble.csv`, et les 18 industries où l'emprunt
+10,1 % et 3,4 %, divisent deux colonnes de `results/ensemble.csv`, et les 18 industries où l'emprunt
 retire du rendement sont les 39 moins les 21 de `results/figures.json`. Le reste des chiffres ne sort
 pas de `results/`. Le format du fichier source en section 3 et la part des capitaux propres retirée
 en section 7 se mesurent sur le tableau de Statistique Canada. Il en va de même des soldes de bilan

@@ -62,6 +62,11 @@ CHARGES_INTRAGROUPE = ["Interest expense, amounts owing to affiliates"]
 # Le produit des participations dans les sociétés du groupe. Il suit la même règle que les intérêts
 # ci-dessus : quand le solde part au financement, son produit part avec lui. Il vaut 6 837 M$ au
 # 2026-04, soit sept fois les 971 M$ d'intérêts intragroupe, donc l'oublier ne serait pas un détail.
+# Une différence avec les intérêts, et elle décide du calcul : ce poste est déjà NET d'impôt. Le
+# tableau vérifie « résultat après impôt + quote-part = résultat net » sur 98,86 % de ses 2 640
+# lignes, à 9 M$ près au pire. Il ne passe donc pas par le facteur (1 - taux) qui répartit l'impôt
+# entre exploitation et financement : le multiplier une seconde fois taxerait deux fois le même
+# produit.
 PRODUITS_PARTICIPATIONS = ["Equity in unconsolidated affiliates"]
 
 TOTAL_ACTIF = "Total assets"
@@ -204,12 +209,15 @@ def reformuler(postes: pd.Series, intragroupe: str = "exploitation") -> Reformul
 
     produits = _somme(postes, PRODUITS_FINANCIERS)
     charges = _somme(postes, CHARGES_FINANCIERES)
+    participations = 0.0
     if intragroupe == "exploitation":
         produits -= _somme(postes, PRODUITS_INTRAGROUPE)
         charges -= _somme(postes, CHARGES_INTRAGROUPE)
     else:
-        produits += _somme(postes, PRODUITS_PARTICIPATIONS)
-    charge_nette = (charges - produits) * (1.0 - taux)
+        participations = _somme(postes, PRODUITS_PARTICIPATIONS)
+    # la quote-part des sociétés du groupe est retranchée APRÈS le facteur d'impôt, parce que le
+    # tableau la publie déjà nette ; tout le reste est avant impôt et se répartit au taux effectif
+    charge_nette = (charges - produits) * (1.0 - taux) - participations
     resultat_net = float(postes[RESULTAT_NET])
     resultat_exploitation = resultat_net + charge_nette
 
