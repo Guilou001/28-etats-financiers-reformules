@@ -96,8 +96,12 @@ class Reformulation:
 
     @property
     def cout_de_la_dette(self) -> float:
-        """Ce que coûte un dollar de dette nette. Non défini quand la dette nette est négative,
-        c'est-à-dire quand l'entreprise a plus de trésorerie que d'emprunts."""
+        """Ce que coûte un dollar de dette nette. Non défini quand la dette nette est nulle.
+
+        Quand elle est négative, c'est-à-dire quand l'entreprise a plus de trésorerie et de
+        placements que d'emprunts, le rapport reste calculé, mais il change de signe et ne mesure
+        plus le prix d'un emprunt.
+        """
         if abs(self.dette_financiere_nette) < 1e-9:
             return np.nan
         return self.charge_financiere_nette / self.dette_financiere_nette

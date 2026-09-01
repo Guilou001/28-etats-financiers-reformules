@@ -14,6 +14,16 @@ from .panel import ENSEMBLE
 
 DEST = Path("results/figures")
 
+MOIS = {"01": "janvier", "02": "février", "03": "mars", "04": "avril", "05": "mai", "06": "juin",
+        "07": "juillet", "08": "août", "09": "septembre", "10": "octobre", "11": "novembre",
+        "12": "décembre"}
+
+
+def _trimestre_en_francais(periode: str) -> str:
+    """« 2026-04 » rendu « avril 2026 », comme le README l'écrit."""
+    annee, mois = str(periode).split("-")
+    return f"{MOIS[mois]} {annee}"
+
 
 # Les six écarts d'un même graphique tombent parfois à la même hauteur, à quelques dixièmes de point
 # près, et deux étiquettes posées au même endroit se recouvrent alors mot pour mot. Le placement est
@@ -81,11 +91,14 @@ def _poser_etiquettes(fig, ax, extremes) -> None:
         occupe.append(boite)
 
 
-def fig_decomposition(reformulations, dest: Path = DEST) -> dict:
+def fig_decomposition(reformulations, periode: str, dest: Path = DEST) -> dict:
     """D'où vient le rendement des capitaux propres de l'ensemble des entreprises canadiennes.
 
     Deux cascades, une par façon de traiter les soldes entre sociétés d'un même groupe. Le point de
     départ est le rendement de l'exploitation, et la seule marche est l'apport de l'emprunt.
+
+    Le trimestre porté par le titre est celui qui a servi à choisir les postes, et il est rendu avec
+    la figure : sortie du README, elle se lirait sinon comme une moyenne de période.
     """
     appliquer()
     fig, axes = plt.subplots(1, 2, figsize=(11.8, 4.8))
@@ -103,10 +116,11 @@ def fig_decomposition(reformulations, dest: Path = DEST) -> dict:
         ax.annotate(f"l'emprunt pèse {fr(100 * apport / cumuls[-1], 1)} % du rendement",
                     (1, exploitation + apport), xytext=(0, 20), textcoords="offset points",
                     ha="center", fontsize=9, color=GRIS)
-        valeurs[titre] = {"exploitation_pct": exploitation, "apport_pct": apport,
-                          "rendement_pct": float(cumuls[-1])}
+        valeurs[titre] = {"periode": str(periode), "exploitation_pct": exploitation,
+                          "apport_pct": apport, "rendement_pct": float(cumuls[-1])}
     axes[0].set_ylabel("Rendement annuel, en % des capitaux propres")
-    fig.suptitle("Presque tout le rendement vient de l'affaire, presque rien de l'emprunt")
+    fig.suptitle("Presque tout le rendement vient de l'affaire, presque rien de l'emprunt "
+                 f"({_trimestre_en_francais(periode)})")
     enregistrer(fig, dest, "decomposition")
     plt.close(fig)
     return valeurs

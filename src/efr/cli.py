@@ -95,12 +95,13 @@ def figures():
     from . import figures as fig
 
     table = donnees.charger()
-    postes = donnees.postes(table, ENSEMBLE, "2026-04")
+    periode = "2026-04"
+    postes = donnees.postes(table, ENSEMBLE, periode)
     lectures = {titre: reformuler(postes, cle) for cle, titre in LECTURES.items()}
     brut = pd.read_csv(RESULTATS / "moyennes_exploitation.csv")
     net = pd.read_csv(RESULTATS / "moyennes_financement.csv")
     rendus = {
-        "decomposition": fig.fig_decomposition(lectures),
+        "decomposition": fig.fig_decomposition(lectures, periode),
         "industries": fig.fig_industries(brut),
         "deux_lectures": fig.fig_deux_lectures(brut, net),
         "intragroupe": fig.fig_intragroupe(table),

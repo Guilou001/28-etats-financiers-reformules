@@ -77,7 +77,13 @@ def moyennes_par_industrie(detail: pd.DataFrame) -> pd.DataFrame:
 
 
 def verdict(moyenne: pd.DataFrame) -> dict:
-    """Les trois nombres qui répondent à la question du dépôt."""
+    """Les six nombres qui répondent à la question du dépôt.
+
+    Trois portent le verdict : le nombre d'industries où l'emprunt ajoute du rendement, le nombre
+    où il pèse plus que l'affaire, et l'apport médian. Les trois autres situent les premiers : le
+    nombre d'industries retenues, la part médiane du rendement qui revient à l'emprunt et le
+    rendement médian de l'exploitation.
+    """
     hors_ensemble = moyenne[moyenne["industrie"].ne(ENSEMBLE)]
     positif = hors_ensemble[hors_ensemble["apport_du_financement_pct"] > 0]
     dominant = hors_ensemble[

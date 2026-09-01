@@ -10,20 +10,21 @@ non financières du Canada.
 ![python](https://img.shields.io/badge/python-3.12-blue)
 ![licence](https://img.shields.io/badge/code-MIT-green)
 
-**Résultat en une phrase.** Sur 26 trimestres et 39 industries, l'affaire elle-même rapporte
-**11,5 %** par an en médiane. L'emprunt n'ajoute que **+0,18 point** en médiane, ou **−0,88 point**
-selon la façon de traiter les soldes entre sociétés d'un même groupe, et la part médiane du rendement
-qui lui revient va de **+0,26 % à −5,25 %**. Ce sont quatre médianes prises sur les 39 industries, et
-non des bornes : dix-neuf industries font mieux dans chaque lecture.
+**Résultat en une phrase.** Sur 26 trimestres et 39 industries, l'affaire elle-même rapporte de
+**11,5 % à 13,1 %** par an en médiane selon la lecture. L'emprunt n'ajoute que **+0,18 point** en
+médiane, ou **−0,88 point** selon la façon de traiter les soldes entre sociétés d'un même groupe, et
+la part médiane du rendement qui lui revient va de **+0,26 % à −5,25 %**. Ce sont six médianes prises
+sur les 39 industries, et non des bornes : dix-neuf industries font mieux dans chaque lecture.
 
 *Summary in English. A Nissim-Penman reformulation of Statistics Canada's quarterly aggregate
 balance sheet and income statement (table 33-10-0225, 327 360 rows, 66 quarters, 40 industries),
 separating operating from financing returns. Eight of the items the reformulation adds up are only
 published from January 2020, so the calculation covers 26 quarters and 1 040 industry-quarters, and
-the other 1 600 are reported as dropped. Operating return is 11.5 % a year at the median. The
-median contribution of leverage is +0.18 point in one reading and −0.88 point in the other, and the
-median share of return on equity it carries runs from +0.26 % to −5.25 %. These are medians over the
-39 industries and not bounds: nineteen industries do better in each reading. Both accounting
+the other 1 600 are reported as dropped. Operating return runs from 11.5 % to 13.1 % a year at the
+median, depending on the reading. The median contribution of leverage is +0.18 point in one reading
+and −0.88 point in the other, and the median share of return on equity it carries runs from +0.26 %
+to −5.25 %. These are medians over the 39 industries and not bounds: nineteen industries do better
+in each reading. Both accounting
 identities hold on all 1 040 rows: 1 million dollars, one unit of the last digit the table publishes,
 and 0.008 points of annual return on the reformulation identity.*
 
@@ -43,8 +44,11 @@ De là vient une égalité vraie par construction, et non estimée :
 > de la dette)
 
 Le levier, le rapport de l'argent emprunté net aux capitaux propres, dit combien de dollars empruntés
-portent un dollar d'actionnaire. L'égalité dit que l'emprunt n'ajoute de la rentabilité que si
-l'affaire rapporte plus que la dette ne coûte, et qu'il en retire sinon.
+portent un dollar d'actionnaire. Il est négatif quand l'entreprise a plus de trésorerie et de
+placements que d'emprunts. Quand il est positif, l'égalité dit que l'emprunt n'ajoute de la
+rentabilité que si l'affaire rapporte plus que la dette ne coûte, et qu'il en retire sinon. Quand il
+est négatif, le signe s'inverse, et la colonne « l'emprunt ajoute » mesure alors le rendement
+sacrifié en gardant ces liquidités.
 
 ## 2. D'où vient le projet, et ce qu'il apporte
 
@@ -116,17 +120,20 @@ les deux lignes, et c'est normal : le rendement des capitaux propres est un fait
 décomposition dépend du rangement. Le deuxième est que l'emprunt pèse **10,1 % du rendement** dans la
 première lecture et **2,3 %** dans la seconde, donc l'affaire fait presque tout dans les deux cas.
 Le troisième est que le coût de la dette de la seconde lecture ne se lit pas comme un taux. Cette
-lecture compense une créance de 1 806 milliards sur le groupe par une dette de 1 290 milliards envers
-lui, et ramène ainsi 3 330 milliards d'emprunts bruts à 280 milliards nets. La compensation efface
-**91,6 %** du solde, mais les produits financiers, qui viennent en déduction des charges, n'en
-effacent que **71,5 %**. Le rapport des deux monte donc sans qu'aucun taux d'emprunt ait bougé. Ce
-tableau porte sur un seul trimestre, et il ne dit rien de la stabilité de ces parts dans le temps.
+lecture compense 1 806 milliards de participations et de créances sur le groupe par une dette de
+1 290 milliards envers lui, et ramène ainsi 3 330 milliards d'emprunts bruts à 280 milliards nets.
+Sur ces 1 806 milliards, 583 seulement sont des créances ; le reste est une participation dans les
+sociétés du groupe. La compensation efface **91,6 %** du solde, mais les produits financiers, qui
+viennent en déduction des charges, n'en effacent que **71,5 %**. Le rapport des deux monte donc sans
+qu'aucun taux d'emprunt ait bougé. Ce tableau porte sur un seul trimestre, et il ne dit rien de la
+stabilité de ces parts dans le temps.
 
 ![La décomposition du rendement, dans les deux lectures](results/figures/decomposition.png)
 
 Comment lire cette figure : la première barre est ce que l'affaire rapporte, la deuxième est ce que
-l'emprunt y ajoute, la troisième est le total. Les deux volets aboutissent au même total de 12,75 %
-et se distinguent seulement par le rangement des soldes entre sociétés d'un même groupe.
+l'emprunt y ajoute, la troisième est le total. Les deux volets portent le trimestre d'avril 2026,
+celui du tableau ci-dessus. Ils aboutissent au même total de 12,75 % et se distinguent seulement par
+le rangement des soldes entre sociétés d'un même groupe.
 
 ### 5.2 Le même calcul sur 39 industries et 26 trimestres
 
@@ -157,7 +164,10 @@ lecture qui laisse les soldes du groupe dans l'exploitation. L'axe horizontal po
 l'affaire, l'axe vertical ce que l'emprunt ajoute au rendement des capitaux propres. Ce dernier est en
 échelle logarithmique symétrique, parce qu'une industrie tombe à −28 points et écraserait les
 trente-huit autres sur une échelle ordinaire. Les points au-dessus de la ligne sont les industries où
-l'emprunt paie.
+le financement ajoute du rendement. Dix des trente-neuf ont un levier moyen négatif : elles ont plus
+de trésorerie et de placements que d'emprunts, et leur point mesure le rendement sacrifié en gardant
+ces liquidités, non le prix d'un emprunt. L'industrie qui tombe si bas en fait partie, avec un levier
+de −0,55 et un rendement d'exploitation de 49,7 %.
 
 ![La même industrie lue deux fois](results/figures/deux_lectures.png)
 
@@ -172,10 +182,14 @@ selon le traitement des soldes du groupe.
 Comment lire cette figure : la part du passif total qui est de l'argent dû à une société du même
 groupe. Elle se calcule sur les 66 trimestres du tableau, et non sur les 26 de la reformulation,
 parce que les deux postes qu'elle emploie sont publiés depuis 2010. Elle passe de **29,8 % au premier
-trimestre de 2010 à 24,6 % au dernier**, sans jamais descendre sous ce dernier niveau. Ce n'est pas
-une dette envers l'extérieur : c'est un jeu d'écritures entre une mère et ses filiales. Toute mesure
-de levier qui l'ignore surestime l'endettement réel des entreprises canadiennes, et c'est pourquoi le
-dépôt publie les deux lectures au lieu d'en choisir une.
+trimestre de 2010 à 24,6 % au dernier**, sans jamais descendre sous ce dernier niveau. Le tableau
+ventile cette dette selon la résidence du prêteur. Au dernier trimestre, **75,2 %** est dû à des
+sociétés du groupe situées au Canada et **24,8 %** à des sociétés hors Canada, cette dernière part
+valant **6,1 %** du passif total. Sur les 66 trimestres, elle va de 23,2 % à 34,1 % de la dette au
+groupe, et de 5,9 % à 10,1 % du passif total. Seule la première fraction est un jeu d'écritures entre
+une mère et ses filiales ; la seconde est un financement venu de l'étranger. Une mesure de levier qui
+range la première dans la dette envers l'extérieur surestime l'endettement des entreprises
+canadiennes, et c'est pourquoi le dépôt publie les deux lectures au lieu d'en choisir une.
 
 ## 6. Reproduire
 
@@ -192,8 +206,11 @@ dessine, et `efr figures` les écrit dans `results/figures.json`. Les deux table
 quatre figures se relisent donc dans `results/`, à deux opérations près. Les parts du rendement,
 10,1 % et 2,3 %, divisent deux colonnes de `results/ensemble.csv`, et les 18 industries où l'emprunt
 retire du rendement sont les 39 moins les 21 de `results/figures.json`. Le reste des chiffres ne sort
-pas de `results/`. Le format du fichier source en section 3, les soldes de bilan de la section 5.1 et
-la part des capitaux propres retirée en section 7 se mesurent sur le tableau de Statistique Canada.
+pas de `results/`. Le format du fichier source en section 3 et la part des capitaux propres retirée
+en section 7 se mesurent sur le tableau de Statistique Canada. Il en va de même des soldes de bilan
+et des produits et charges financiers de la section 5.1, et de la ventilation de la dette au groupe
+selon la résidence du prêteur en section 5.3. La liste des huit postes ouverts en 2020, et son
+partage en cinq postes de bilan et trois de résultat, s'y mesurent aussi.
 Les 1 014 observations en coupe sont le produit de 26 trimestres par 39 industries, et le compte de
 22 tests est celui que rend `uv run pytest`.
 
@@ -204,6 +221,8 @@ Les 1 014 observations en coupe sont le produit de 26 trimestres par 39 industri
 | Le rangement des postes entre exploitation et financement est un choix | déclaré ; les listes sont en tête du module de reformulation, lisibles et modifiables |
 | Le traitement des soldes entre sociétés d'un même groupe change le signe du verdict pour 3 industries sur les 14 montrées | mesuré ; les deux lectures sont publiées côte à côte |
 | Le coût de la dette de la lecture nette ne se lit pas comme un taux | déclaré ; son dénominateur est douze fois plus petit que les emprunts bruts, alors que le produit levier fois écart, lui, reste juste |
+| La lecture nette range du côté du financement une participation dans les sociétés du groupe, et non un prêt | mesuré ; sur les 1 806 milliards compensés au 2026-04, 583 sont des créances et 1 223 une participation, si bien que l'opération n'est pas la compensation d'un prêt par un emprunt. La part de créance va de 27,3 % à 32,3 % sur les 66 trimestres |
+| Dix industries sur trente-neuf en lecture brute, et vingt sur trente-neuf en lecture nette, ont plus de trésorerie et de placements que d'emprunts | mesuré ; leur levier moyen est négatif, et la colonne « l'emprunt ajoute » y mesure le rendement sacrifié en gardant ces liquidités, non le prix d'une dette. Sur les lignes trimestrielles, 284 sur 1 040 en lecture brute et 515 sur 1 040 en lecture nette |
 | Les données sont agrégées par industrie, non par entreprise | reconnu ; une industrie qui mêle des sociétés très endettées et des sociétés sans dette donne une moyenne qui ne décrit aucune des deux |
 | Vingt-six trimestres, de janvier 2020 à avril 2026, ne portent qu'un choc de taux et une récession | mesuré ; huit postes manquent au tableau avant 2020, le verdict se pose donc par industrie, sur 1 014 observations en coupe, les 26 lignes d'ensemble mises à part, et non par époque |
 | L'impôt est réparti au taux effectif de l'industrie, borné entre 0 et 60 % | déclaré ; une industrie en perte produit sinon un taux aberrant |

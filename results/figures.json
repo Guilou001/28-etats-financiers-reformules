@@ -1,11 +1,13 @@
 {
   "decomposition": {
     "Soldes du groupe laissés dans l'exploitation": {
+      "periode": "2026-04",
       "exploitation_pct": 11.464644583566592,
       "apport_pct": 1.2873299504700313,
       "rendement_pct": 12.751974534036624
     },
     "Soldes du groupe comptés comme du financement": {
+      "periode": "2026-04",
       "exploitation_pct": 12.460141522549458,
       "apport_pct": 0.29183301148716706,
       "rendement_pct": 12.751974534036625
