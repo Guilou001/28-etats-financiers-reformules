@@ -88,7 +88,7 @@ Les noms d'industries qui s'affichent ne sont pas traduits : ils sont recopiés 
 + *Vérifier que le bilan se referme.* L'actif moins le passif moins les capitaux propres doit valoir zéro. Mesuré : l'écart maximal sur les 1 040 lignes calculées vaut *1 million de dollars*, c'est-à-dire une unité du dernier chiffre publié, le tableau étant exprimé en millions de dollars et arrondi à l'unité. Sur les 2 640 lignes du tableau, écartées comprises, il vaut 8 millions.
 + *Ranger chaque poste* selon son usage, financier ou d'exploitation. C'est le seul vrai choix du dépôt, et il est écrit en clair dans le code plutôt que caché.
 + *Sortir les participations minoritaires et les actions privilégiées* des capitaux propres : elles ne reviennent pas à l'actionnaire ordinaire. Le tableau ne publie ni la part du résultat qui leur revient, ni le dividende privilégié, si bien que la sortie n'est faite qu'au bilan. La section 7 chiffre ce que cela laisse dans le numérateur.
-+ *Répartir l'impôt* entre exploitation et financement, au taux effectif de chaque industrie.
++ *Répartir l'impôt* entre exploitation et financement, au taux effectif de chaque industrie. Une exception : la quote-part des sociétés du groupe, que le tableau publie déjà nette d'impôt, ne repasse pas par ce taux. La lui appliquer donnerait 12,46 % de rendement d'exploitation au lieu de 12,32 %, et +0,29 point d'apport au lieu de +0,43.
 + *Vérifier la seconde identité.* Le rendement calculé directement doit égaler le rendement de l'affaire plus l'apport de l'emprunt. Mesuré : l'écart maximal vaut *2 × 10⁻⁵* en fraction de rendement trimestriel, soit *0,008 point de rendement annuel*.
 
 == 5. L'affaire fait presque tout le rendement, dans les deux lectures

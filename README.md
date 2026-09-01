@@ -100,6 +100,9 @@ française du même tableau.
    revient, ni le dividende privilégié, si bien que la sortie n'est faite qu'au bilan. La section 7
    chiffre ce que cela laisse dans le numérateur.
 4. **Répartir l'impôt** entre exploitation et financement, au taux effectif de chaque industrie.
+   Une exception : la quote-part des sociétés du groupe, que le tableau publie déjà nette d'impôt,
+   ne repasse pas par ce taux. La lui appliquer donnerait 12,46 % de rendement d'exploitation au
+   lieu de 12,32 %, et +0,29 point d'apport au lieu de +0,43.
 5. **Vérifier la seconde identité.** Le rendement calculé directement doit égaler le rendement de
    l'affaire plus l'apport de l'emprunt. Mesuré : l'écart maximal vaut **2 × 10⁻⁵** en fraction de
    rendement trimestriel, soit **0,008 point de rendement annuel**.
