@@ -1,20 +1,21 @@
-# Les entreprises canadiennes gagnent leur argent en vendant, pas en empruntant
+# Séparer le rendement de l'activité et l'effet de l'endettement
 
-Quand une entreprise rapporte de l'argent à ses propriétaires, deux explications sont possibles. Soit
-elle vend bien ce qu'elle fabrique. Soit elle a beaucoup emprunté, et l'argent emprunté lui rapporte
-plus qu'il ne lui coûte. Ce n'est pas la même chose : la première explication tient dans la durée, la
-seconde se retourne dès que les taux montent. Ce dépôt sépare les deux, sur toutes les entreprises
-non financières du Canada.
+Une entreprise peut rapporter de l'argent à ses actionnaires parce que son activité est rentable ou parce qu'elle utilise de la dette. Ces deux sources n'ont pas le même risque. En effet, l'endettement augmente le rendement seulement lorsque l'activité rapporte davantage que le coût de la dette.
+
+Le présent projet réorganise les états financiers agrégés de Statistique Canada afin de séparer les opérations et le financement. La base contient 327 360 lignes et quarante industries, mais huit postes nécessaires commencent seulement en 2020. L'analyse porte donc sur 26 trimestres et 39 industries comparables.
+
+**Résultat principal.** Le rendement annuel médian de l'activité se situe entre 11,5 % et 13,0 % selon le traitement des soldes entre sociétés d'un même groupe. L'endettement ajoute seulement 0,18 point de pourcentage dans une lecture et retire 0,88 point dans l'autre. Sa part médiane dans le rendement des capitaux propres varie ainsi de +0,26 % à -5,21 %. Les deux identités comptables tiennent sur les 1 040 observations retenues.
+
+Afin de suivre cette décomposition, nous présenterons d'abord les états financiers et les postes disponibles. Dans un deuxième temps, nous expliquerons comment le bilan est séparé entre activité et financement. Ensuite, nous calculerons les rendements et nous comparerons les industries. Enfin, nous étudierons le traitement des soldes intragroupe, les observations retirées, les limites et la reproduction.
 
 [![ci](https://github.com/Guilou001/28-etats-financiers-reformules/actions/workflows/ci.yml/badge.svg)](https://github.com/Guilou001/28-etats-financiers-reformules/actions/workflows/ci.yml)
 ![python](https://img.shields.io/badge/python-3.12-blue)
 ![licence](https://img.shields.io/badge/code-MIT-green)
 
-**Résultat en une phrase.** Sur 26 trimestres et 39 industries, l'affaire elle-même rapporte de
-**11,5 % à 13,0 %** par an en médiane selon la lecture. L'emprunt n'ajoute que **+0,18 point** en
-médiane, ou **−0,88 point** selon la façon de traiter les soldes entre sociétés d'un même groupe, et
-la part médiane du rendement qui lui revient va de **+0,26 % à −5,21 %**. Ce sont six médianes prises
-sur les 39 industries, et non des bornes : dix-neuf industries font mieux dans chaque lecture.
+Le rapport détaillé est disponible en PDF : [rapport/rapport.pdf](rapport/rapport.pdf).
+
+<details>
+<summary>Résumé en anglais</summary>
 
 *Summary in English. A Nissim-Penman reformulation of Statistics Canada's quarterly aggregate
 balance sheet and income statement (table 33-10-0225, 327 360 rows, 66 quarters, 40 industries),
@@ -28,7 +29,8 @@ in each reading. Both accounting
 identities hold on all 1 040 rows: 1 million dollars, one unit of the last digit the table publishes,
 and 0.008 points of annual return on the reformulation identity.*
 
-## 1. La question posée
+</details>
+## 1. La question en détail
 
 **En mots simples.** Une entreprise qui rapporte 12 % par an à ses actionnaires : d'où viennent ces
 12 % ? Le bilan publié ne le dit pas, parce qu'il range les actifs par nature et non par usage. La
